@@ -9,11 +9,20 @@
         android:id="@+id/navigation_home"
         android:name="com.example.birthdaynotification.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_addBirthdayFragment"
+            app:destination="@id/addBirthdayFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.birthdaynotification.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/addBirthdayFragment"
+        android:name="com.example.birthdaynotification.ui.AddBirthday.AddBirthdayFragment"
+        android:label="add_birthday_fragment"
+        tools:layout="@layout/add_birthday_fragment" />
 </navigation>
