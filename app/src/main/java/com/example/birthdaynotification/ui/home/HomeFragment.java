@@ -18,7 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.birthdaynotification.Adapters.BirthdayListAdapter;
 import com.example.birthdaynotification.R;
+import com.example.birthdaynotification.RoomDb.Entities.Birthday;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Collections;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -26,6 +30,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView birthdayListView;
     private FloatingActionButton addFab;
     private NavController navController;
+    BirthdayListAdapter birthdayListAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +40,7 @@ public class HomeFragment extends Fragment {
 
         initializeViews(root);
         setOnClickListeners();
+        setLiveDataObservers();
         initBirthdayList();
 
         return root;
@@ -53,7 +59,7 @@ public class HomeFragment extends Fragment {
 
     private void initBirthdayList() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        BirthdayListAdapter birthdayListAdapter = new BirthdayListAdapter(getContext());
+        birthdayListAdapter = new BirthdayListAdapter(getContext(), Collections.emptyList());
         birthdayListView.setLayoutManager(linearLayoutManager);
         birthdayListView.setAdapter(birthdayListAdapter);
 
@@ -62,6 +68,12 @@ public class HomeFragment extends Fragment {
     private void setOnClickListeners() {
         addFab.setOnClickListener(v -> {
             navController.navigate(R.id.action_navigation_home_to_addBirthdayFragment);
+        });
+    }
+
+    private void setLiveDataObservers() {
+        homeViewModel.getBirthdayListLiveData().observe(getViewLifecycleOwner(), birthdayList -> {
+            birthdayListAdapter.setBirthdayList(birthdayList);
         });
     }
 }

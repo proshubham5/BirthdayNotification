@@ -1,19 +1,30 @@
 package com.example.birthdaynotification.ui.home;
 
+import android.app.Application;
+
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+import com.example.birthdaynotification.Repositories.BirthdayTableRepository;
+import com.example.birthdaynotification.RoomDb.Entities.Birthday;
 
-    private MutableLiveData<String> mText;
+import java.util.List;
 
-    public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+public class HomeViewModel extends AndroidViewModel {
+
+    private BirthdayTableRepository birthdayTableRepository;
+
+    private LiveData<List<Birthday>> birthdayListLiveData;
+
+    public HomeViewModel(Application application) {
+        super(application);
+        birthdayTableRepository = new BirthdayTableRepository(application.getApplicationContext());
+        birthdayListLiveData = birthdayTableRepository.getAllBirthdays();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<List<Birthday>> getBirthdayListLiveData() {
+        return birthdayListLiveData;
     }
 }

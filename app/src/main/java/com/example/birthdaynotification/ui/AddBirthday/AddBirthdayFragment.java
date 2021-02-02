@@ -1,6 +1,5 @@
 package com.example.birthdaynotification.ui.AddBirthday;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -26,7 +25,6 @@ import com.example.birthdaynotification.R;
 import com.example.birthdaynotification.RoomDb.Entities.Birthday;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -111,6 +109,8 @@ public class AddBirthdayFragment extends Fragment {
         mViewModel.getNameLiveData().observe(getViewLifecycleOwner(), s -> {
             saveBtn.setEnabled(!s.equals(""));
         });
+
+
     }
 
     @Override
@@ -160,7 +160,7 @@ public class AddBirthdayFragment extends Fragment {
         });
 
         saveBtn.setOnClickListener(v -> {
-            Birthday birthday = new Birthday(123, nameEt.getText().toString());
+            Birthday birthday = new Birthday(nameEt.getText().toString(), dateEt.getText().toString());
             mViewModel.insert(birthday);
         });
     }

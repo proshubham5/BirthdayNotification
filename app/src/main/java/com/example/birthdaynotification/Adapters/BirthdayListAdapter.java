@@ -10,15 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.birthdaynotification.R;
+import com.example.birthdaynotification.RoomDb.Entities.Birthday;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BirthdayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private List<Birthday> birthdayList;
     Context context;
     LayoutInflater inflater;
 
-    public BirthdayListAdapter(Context ctx) {
+    public BirthdayListAdapter(Context ctx, List<Birthday> birthdayList) {
         this.context = ctx;
         this.inflater = LayoutInflater.from (ctx);
+        this.birthdayList = birthdayList;
     }
 
     @NonNull
@@ -31,12 +37,13 @@ public class BirthdayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         // Manipulate the ui here
-        ((ListViewHolder)holder).setListDetails("Shubham singh", "18-11-2000");
+        Birthday birthday = birthdayList.get(position);
+        ((ListViewHolder)holder).setListDetails(birthday.getName(), birthday.getDate());
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return birthdayList.size();
     }
 
     public static class ListViewHolder extends RecyclerView.ViewHolder {
@@ -54,6 +61,11 @@ public class BirthdayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             nameView.setText(name);
             dateView.setText(date);
         }
+    }
+
+    public void setBirthdayList(List<Birthday> birthdayList) {
+        this.birthdayList = birthdayList;
+        this.notifyDataSetChanged();
     }
 
 }
