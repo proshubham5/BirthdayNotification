@@ -13,9 +13,9 @@ public class Birthday {
     private String name;
 
     @ColumnInfo(name = "date")
-    private String date;
+    private Long date;  // date in millis
 
-    public Birthday( String name, String date) {
+    public Birthday( String name, Long date) {
         bid = 0;
         this.name = name;
         this.date = date;
@@ -29,7 +29,7 @@ public class Birthday {
         return name;
     }
 
-    public String getDate() {
+    public Long getDate() {
         return date;
     }
 
@@ -41,7 +41,7 @@ public class Birthday {
         this.name = name;
     }
 
-    public void setDate(String date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 }

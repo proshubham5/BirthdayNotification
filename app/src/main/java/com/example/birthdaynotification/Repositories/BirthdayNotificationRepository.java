@@ -26,7 +26,6 @@ public class BirthdayNotificationRepository {
     private Context mContext;
     private NotificationManager mNotificationManager;
 
-    private static final int NOTIFICATION_ID = 0;
     private static final String PRIMARY_CHANNEL_ID = "birthday_notification_channel";
 
     public BirthdayNotificationRepository(Context context) {
@@ -69,7 +68,7 @@ public class BirthdayNotificationRepository {
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
     }
 
-    public void deliverNotification() {
+    public void deliverNotification(int NOTIFICATION_ID) {
         Intent contentIntent = new Intent(mContext, MainActivity.class);
 
         PendingIntent contentPendingIntent = PendingIntent.getActivity
@@ -80,20 +79,12 @@ public class BirthdayNotificationRepository {
 
     }
 
-    public void setNotificationAlarm(String date) {
+    public void setNotificationAlarm(Long notifyDate, int NOTIFICATION_ID) {
         Intent notifyIntent = new Intent(mContext, BirthdayAlarmReceiver.class);
+        notifyIntent.putExtra("notification_id", NOTIFICATION_ID);
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, Integer.parseInt(date.substring(7)));
-        calendar.set(Calendar.MONTH, Integer.parseInt(date.substring(4, 6))); // January has value 0
-        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(0, 2)));
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 33);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.AM_PM, Calendar.AM );
-
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(), notifyPendingIntent);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, notifyDate, notifyPendingIntent);
     }
 }

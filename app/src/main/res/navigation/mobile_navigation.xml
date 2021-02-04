@@ -24,5 +24,6 @@
         android:id="@+id/addBirthdayFragment"
         android:name="com.example.birthdaynotification.ui.AddBirthday.AddBirthdayFragment"
         android:label="Add Birthday"
-        tools:layout="@layout/add_birthday_fragment" />
+        tools:layout="@layout/add_birthday_fragment" >
+    </fragment>
 </navigation>

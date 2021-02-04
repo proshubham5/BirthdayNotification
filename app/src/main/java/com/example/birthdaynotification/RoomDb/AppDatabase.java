@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
         entities = {
                 Birthday.class
         },
-        version = 1)
+        version = 2)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String DB_NAME = "birthday_database";

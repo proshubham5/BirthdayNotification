@@ -23,12 +23,14 @@ import android.widget.Toast;
 
 import com.example.birthdaynotification.R;
 import com.example.birthdaynotification.RoomDb.Entities.Birthday;
+import com.example.birthdaynotification.Utils.DateTimeUtils;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -48,6 +50,8 @@ public class AddBirthdayFragment extends Fragment {
     private Button selectDateBtn;
     private Button saveBtn;
     private MaterialToolbar appToolbar;
+
+    private Long dateInMillis = today;
 
     NavController navController;
 
@@ -94,7 +98,8 @@ public class AddBirthdayFragment extends Fragment {
         };
         nameEt.addTextChangedListener(inputTextWatcher);
 
-        dateEt.setText(getDateFromEpochMillis(today));
+        LocalDate todayDate = DateTimeUtils.convertFromEpochMillisToLocalDate(today);
+        dateEt.setText(DateTimeUtils.getDateStringFromLocalDate(todayDate));
     }
 
     private void setUpAppBar() {
@@ -111,11 +116,6 @@ public class AddBirthdayFragment extends Fragment {
         });
 
 
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     private void initializeViews(View root) {
@@ -150,8 +150,10 @@ public class AddBirthdayFragment extends Fragment {
 
             picker.addOnPositiveButtonClickListener(selection -> {
                 Log.d(TAG, String.valueOf(selection));
+                dateInMillis = selection;
 
-                String date = getDateFromEpochMillis(selection);
+                LocalDate bDate = DateTimeUtils.convertFromEpochMillisToLocalDate(selection);
+                String date = DateTimeUtils.getDateStringFromLocalDate(bDate);
                 dateEt.setText(date);
 
             });
@@ -160,20 +162,12 @@ public class AddBirthdayFragment extends Fragment {
         });
 
         saveBtn.setOnClickListener(v -> {
-            Birthday birthday = new Birthday(nameEt.getText().toString(), dateEt.getText().toString());
+            Birthday birthday = new Birthday(nameEt.getText().toString(), dateInMillis);
             mViewModel.insert(birthday);
+
+            mViewModel.setNotificationAlarm(birthday);
+            navController.navigate(R.id.navigation_home);
         });
-    }
-
-    public String getDateFromEpochMillis(Long millis) {
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        c.setTimeInMillis(millis);
-        Date date = c.getTime();
-        String day = new SimpleDateFormat("dd").format(date);    // always 2 digits
-        String month = new SimpleDateFormat("MM").format(date);  // always 2 digits
-        String year = new SimpleDateFormat("yyyy").format(date); // 4 digit year
-
-        return day + "-" + month + "-" + year;
     }
 
     @Override

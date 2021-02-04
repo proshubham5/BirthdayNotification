@@ -76,4 +76,6 @@ public class HomeFragment extends Fragment {
             birthdayListAdapter.setBirthdayList(birthdayList);
         });
     }
+
+
 }

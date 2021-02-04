@@ -3,6 +3,7 @@ package com.example.birthdaynotification;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.birthdaynotification.Repositories.BirthdayNotificationRepository;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeViews();
+
+        BirthdayNotificationRepository birthdayNotificationRepository = new BirthdayNotificationRepository(this);
+        birthdayNotificationRepository.createNotificationChannel();
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navView, navController);

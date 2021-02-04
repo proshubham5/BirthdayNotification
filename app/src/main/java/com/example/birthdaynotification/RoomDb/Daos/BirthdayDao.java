@@ -19,6 +19,9 @@ public interface BirthdayDao {
     @Query("SELECT * FROM birthdays WHERE bid IN (:userIds)")
     List<Birthday> loadAllByIds(int[] userIds);
 
+    @Query("SELECT * FROM birthdays WHERE bid = :id")
+    Birthday getBirthdayById(int id);
+
     @Query("SELECT * FROM birthdays WHERE name LIKE :name LIMIT 1")
     Birthday findByName(String name);
 

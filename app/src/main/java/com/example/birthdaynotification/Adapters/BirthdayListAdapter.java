@@ -11,9 +11,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.birthdaynotification.R;
 import com.example.birthdaynotification.RoomDb.Entities.Birthday;
+import com.example.birthdaynotification.Utils.DateTimeUtils;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class BirthdayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -38,7 +44,9 @@ public class BirthdayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         // Manipulate the ui here
         Birthday birthday = birthdayList.get(position);
-        ((ListViewHolder)holder).setListDetails(birthday.getName(), birthday.getDate());
+        LocalDate birthDate = DateTimeUtils.convertFromEpochMillisToLocalDate(birthday.getDate());
+        String showDate = DateTimeUtils.getDateStringFromLocalDate(birthDate);
+        ((ListViewHolder)holder).setListDetails(birthday.getName(), showDate);
     }
 
     @Override
