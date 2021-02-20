@@ -8,13 +8,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.SystemClock;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
 import com.example.birthdaynotification.BroadcastReceivers.BirthdayAlarmReceiver;
 import com.example.birthdaynotification.MainActivity;
 import com.example.birthdaynotification.R;
+import com.example.birthdaynotification.RoomDb.Entities.Birthday;
 
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -22,6 +25,8 @@ import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class BirthdayNotificationRepository {
+
+    private static final String TAG = "BirthdayNotificationRep";
 
     private Context mContext;
     private NotificationManager mNotificationManager;
@@ -56,12 +61,25 @@ public class BirthdayNotificationRepository {
         }
     }
 
-    private NotificationCompat.Builder makeNotificationBuilder(PendingIntent contentPendingIntent) {
+    private NotificationCompat.Builder makeNotificationBuilder(PendingIntent contentPendingIntent, int bid) {
+
+        String title = String.valueOf(bid);
+        String message = String.valueOf(bid);
+
+        try {
+            BirthdayTableRepository birthdayTableRepository = new BirthdayTableRepository(mContext);
+            Birthday birthday = birthdayTableRepository.getBirthdayById(bid);
+            title = "Today is " + birthday.getName() + "'s birthday! (" + bid + ")" ;
+            message = "Wish him or her with full joy.";
+
+        } catch (Exception e) {
+            Log.e(TAG, "makeNotificationBuilder: notification builder failed : ", e);
+        }
 
         return new NotificationCompat.Builder(mContext, PRIMARY_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_home_black_24dp)
-                .setContentTitle("Stand Up Alert")
-                .setContentText("You should stand up and walk around now!")
+                .setContentTitle(title)
+                .setContentText(message)
                 .setContentIntent(contentPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
@@ -74,7 +92,7 @@ public class BirthdayNotificationRepository {
         PendingIntent contentPendingIntent = PendingIntent.getActivity
                 (mContext, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = makeNotificationBuilder(contentPendingIntent);
+        NotificationCompat.Builder builder = makeNotificationBuilder(contentPendingIntent, NOTIFICATION_ID);
         mNotificationManager.notify(NOTIFICATION_ID, builder.build());
 
     }
@@ -85,6 +103,6 @@ public class BirthdayNotificationRepository {
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, notifyDate, notifyPendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, notifyDate, notifyPendingIntent);
     }
 }

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "birthdays")
 public class Birthday {
     @PrimaryKey (autoGenerate = true)
+
     private int bid;
 
     @ColumnInfo(name = "name")

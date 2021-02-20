@@ -33,9 +33,7 @@ public class BirthdayAlarmReceiver extends BroadcastReceiver {
         birthdayNotificationRepository.deliverNotification(NOTIFICATION_ID);
 
         LocalDate localDate = LocalDate.now();
-        localDate.plusYears(1);
-
-        Long NotificationEpochMillis = DateTimeUtils.getEpochMillisFromLocalDate(localDate);
+        Long NotificationEpochMillis = DateTimeUtils.getEpochMillisFromLocalDate(localDate.plusYears(1));
 
         // set notification alarm for next year
         birthdayNotificationRepository.setNotificationAlarm(NotificationEpochMillis, NOTIFICATION_ID);

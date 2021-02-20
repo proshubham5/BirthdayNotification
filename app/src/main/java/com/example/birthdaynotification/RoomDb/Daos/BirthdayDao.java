@@ -20,10 +20,13 @@ public interface BirthdayDao {
     List<Birthday> loadAllByIds(int[] userIds);
 
     @Query("SELECT * FROM birthdays WHERE bid = :id")
-    Birthday getBirthdayById(int id);
+    Birthday[] getBirthdayById(int id);
 
     @Query("SELECT * FROM birthdays WHERE name LIKE :name LIMIT 1")
     Birthday findByName(String name);
+
+    @Query("SELECT count(*) FROM birthdays")
+    int countNoOfBirthdays();
 
     @Insert
     void insertAll(Birthday... birthdays);
