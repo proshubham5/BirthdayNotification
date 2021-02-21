@@ -44,13 +44,8 @@ public class BirthdayTableRepository {
 
         Callable<Birthday[]> callable = () -> birthdayDao.getBirthdayById(bid);
 
-        /*AppDatabase.databaseWriteExecutor.execute(() -> {
-            birthdayDao.getBirthdayById(bid);
-        });*/
-
         Future<Birthday[]> res = AppDatabase.databaseWriteExecutor.submit(callable);
         Log.d(TAG, "getBirthdayById: res is : " + res.get()[0]);
-        AppDatabase.databaseWriteExecutor.shutdown();
         return res.get()[0];
     }
 }

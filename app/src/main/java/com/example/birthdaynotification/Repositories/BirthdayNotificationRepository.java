@@ -15,7 +15,10 @@ import androidx.core.app.NotificationCompat;
 import com.example.birthdaynotification.BroadcastReceivers.BirthdayAlarmReceiver;
 import com.example.birthdaynotification.MainActivity;
 import com.example.birthdaynotification.R;
+import com.example.birthdaynotification.RoomDb.AppDatabase;
+import com.example.birthdaynotification.RoomDb.Daos.NotificationDao;
 import com.example.birthdaynotification.RoomDb.Entities.Birthday;
+import com.example.birthdaynotification.RoomDb.Entities.Notification;
 
 import java.time.Instant;
 import java.util.Calendar;
@@ -35,6 +38,7 @@ public class BirthdayNotificationRepository {
 
     public BirthdayNotificationRepository(Context context) {
         this.mContext = context;
+        AppDatabase appDatabase = AppDatabase.getInstance(context);
         // Create a notification manager object.
         mNotificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
     }
@@ -69,7 +73,7 @@ public class BirthdayNotificationRepository {
         try {
             BirthdayTableRepository birthdayTableRepository = new BirthdayTableRepository(mContext);
             Birthday birthday = birthdayTableRepository.getBirthdayById(bid);
-            title = "Today is " + birthday.getName() + "'s birthday! (" + bid + ")" ;
+            title = "Today is " + birthday.getName() + "'s birthday!" ;
             message = "Wish him or her with full joy.";
 
         } catch (Exception e) {
@@ -95,6 +99,19 @@ public class BirthdayNotificationRepository {
         NotificationCompat.Builder builder = makeNotificationBuilder(contentPendingIntent, NOTIFICATION_ID);
         mNotificationManager.notify(NOTIFICATION_ID, builder.build());
 
+        try {
+            BirthdayTableRepository birthdayTableRepository = new BirthdayTableRepository(mContext);
+            Birthday birthday = birthdayTableRepository.getBirthdayById(NOTIFICATION_ID);
+            String title = "Today is " + birthday.getName() + "'s birthday!";
+            String message = "Wish him or her with full joy.";
+
+            NotificationTableRepository notificationTableRepository = new NotificationTableRepository(mContext);
+            notificationTableRepository.insert(new Notification(title, message));
+
+        } catch (Exception e) {
+            Log.e(TAG, "makeNotificationBuilder: notification builder failed : ", e);
+        }
+
     }
 
     public void setNotificationAlarm(Long notifyDate, int NOTIFICATION_ID) {
@@ -105,4 +122,5 @@ public class BirthdayNotificationRepository {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, notifyDate, notifyPendingIntent);
     }
+
 }

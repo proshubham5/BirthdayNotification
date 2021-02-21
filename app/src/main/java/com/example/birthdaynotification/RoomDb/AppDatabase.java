@@ -7,14 +7,17 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.birthdaynotification.RoomDb.Daos.BirthdayDao;
+import com.example.birthdaynotification.RoomDb.Daos.NotificationDao;
 import com.example.birthdaynotification.RoomDb.Entities.Birthday;
+import com.example.birthdaynotification.RoomDb.Entities.Notification;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(
         entities = {
-                Birthday.class
+                Birthday.class,
+                Notification.class
         },
         version = 2)
 public abstract class AppDatabase extends RoomDatabase {
@@ -22,8 +25,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final String DB_NAME = "birthday_database";
     private static volatile AppDatabase instance;
     private static final int NUMBER_OF_THREADS = 4;
-    public static final ExecutorService databaseWriteExecutor =
-            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public static AppDatabase getInstance(Context context) {
         if(instance == null) {
@@ -37,4 +39,5 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract BirthdayDao birthdayDao();
+    public abstract NotificationDao notificationDao();
 }
